@@ -650,12 +650,11 @@ draw_horiz_line (int y)
 void
 print_status_text(const char *text, char fg_color, char bg_color)
 {
-	unsigned char *addr = mem_image;
 	char *buffer[4] = { mem_image, mem_image + SCROLL_SIZE,
 	                    mem_image + 2 * SCROLL_SIZE,
 	                    mem_image + 3 * SCROLL_SIZE };
 
-	rasterize_text(addr, text, fg_color, bg_color);
+	rasterize_text(buffer, text, fg_color, bg_color);
 }
 
 #endif /* !defined(TEXT_RESTORE_PROGRAM) */
