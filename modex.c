@@ -648,6 +648,13 @@ draw_horiz_line (int y)
     return 0;
 }
 
+void
+print_status_text(const char *text, char fg_color, char bg_color)
+{
+	unsigned char *addr = mem_image;
+	rasterize_text(addr, text, fg_color, bg_color);
+}
+
 #endif /* !defined(TEXT_RESTORE_PROGRAM) */
 
 
