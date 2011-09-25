@@ -563,11 +563,12 @@ unsigned char font_data[256][16] = {
 };
 
 /*
- * Print the text centered into buffer, a buffer of SCROLL_X_WIDTH
- * pixels wide and 18 pixels tall. Font size is 16 pixels tall.
- * strings longer than SCROLL_X_DIM / 8 - 1 characters will be truncated.
+ * Print the text centered into the four buffers pointed to by buffer,
+ * each buffer should be SCROLL_X_WIDTH pixels wide and 18 pixels tall.
+ * Font size is 16 pixels tall. Strings longer than SCROLL_X_DIM / 8 - 1
+ * characters will be truncated. This is to optimize for mode-x planes.
  */
-void rasterize_text(char *buffer, const char *text, char fg_color, char bg_color)
+void rasterize_text(char **buffer, const char *text, char fg_color, char bg_color)
 {
 	int i = 0;
 	int x;
@@ -575,18 +576,18 @@ void rasterize_text(char *buffer, const char *text, char fg_color, char bg_color
 	int left_padding;
 	int right_padding;
 
-	/* clear the buffer */
+	/* clear the buffers */
 	for (i = 0; i < 4; ++i) {
-		memset(buffer + i * SCROLL_SIZE, bg_color, NUM_STATUS_ROWS * SCROLL_X_WIDTH);
+		memset(buffer[i], bg_color, NUM_STATUS_ROWS * SCROLL_X_WIDTH);
 	}
 
 	/* calculate the left_padding required to center the text */
 }
 
 /*
- * Rasterize c into memory located at buffer.
+ * Rasterize c into memory located in the four buffers pointed to by buffer.
  */
-void rasterize_char(char *buffer, char c, char fg_color, char bg_color)
+void rasterize_char(char **buffer, char c, char fg_color, char bg_color)
 {
 	int p = 0;
 	int y = 1;

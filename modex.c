@@ -73,7 +73,6 @@
 #define SCREEN_SIZE	(SCROLL_SIZE * 4 + 1)
 #define BUILD_BUF_SIZE  (SCREEN_SIZE + 20000) 
 #define BUILD_BASE_INIT ((BUILD_BUF_SIZE - SCREEN_SIZE) / 2)
-#define NUM_STATUS_ROWS 18
 
 /* Mode X and general VGA parameters */
 #define VID_MEM_SIZE       131072
@@ -652,6 +651,10 @@ void
 print_status_text(const char *text, char fg_color, char bg_color)
 {
 	unsigned char *addr = mem_image;
+	char *buffer[4] = { mem_image, mem_image + SCROLL_SIZE,
+	                    mem_image + 2 * SCROLL_SIZE,
+	                    mem_image + 3 * SCROLL_SIZE };
+
 	rasterize_text(addr, text, fg_color, bg_color);
 }
 

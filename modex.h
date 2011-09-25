@@ -59,6 +59,7 @@
 #define SCROLL_X_DIM	IMAGE_X_DIM                /* full image width      */
 #define SCROLL_Y_DIM    IMAGE_Y_DIM                /* full image width      */
 #define SCROLL_X_WIDTH  (IMAGE_X_DIM / 4)          /* addresses (bytes)     */
+#define NUM_STATUS_ROWS 18
 
 
 /*
@@ -135,5 +136,7 @@ extern int draw_horiz_line (int y);
 
 /* draw a vertical line at horizontal pixel x within the logical view window */
 extern int draw_vert_line (int x);
+
+extern void print_status_text(const char *text, char fg_color, char bg_color);
 
 #endif /* MODEX_H */
