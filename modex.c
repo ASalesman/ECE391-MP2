@@ -73,7 +73,7 @@
 #define SCREEN_SIZE	(SCROLL_SIZE * 4 + 1)
 #define BUILD_BUF_SIZE  (SCREEN_SIZE + 20000) 
 #define BUILD_BASE_INIT ((BUILD_BUF_SIZE - SCREEN_SIZE) / 2)
-#define NUM_STATUS_ROWS 18;
+#define NUM_STATUS_ROWS 18
 
 /* Mode X and general VGA parameters */
 #define VID_MEM_SIZE       131072
