@@ -589,7 +589,7 @@ draw_vert_line (int x)
 	addr = img3 + (x >> 2) + show_y * SCROLL_X_WIDTH;
 	p_off = (3 - (x & 3));
 	for (i = 0; i < SCROLL_Y_DIM; ++i) {
-		addr[i + p_off * SCROLL_SIZE] = buf[i];
+		addr[i * SCROLL_X_WIDTH + p_off * SCROLL_SIZE] = buf[i];
 	}
 
 	return 0;
