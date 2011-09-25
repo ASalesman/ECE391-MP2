@@ -576,8 +576,23 @@ clear_screens ()
 int
 draw_vert_line (int x)
 {
-    /* to be written... */
-    return 0;
+	unsigned char buf[SCROLL_Y_DIM];
+	unsigned char *addr;
+
+	int p_off;
+	int i;
+
+	if (x < 0 || x > SCROLL_X_DIM) return -1;
+
+	x += show_x;
+	(*vert_line_fn)(x, show_y, buf);
+	addr = img3 + (x >> 2) + show_y * SCROLL_X_WIDTH;
+	p_off = (3 - (x & 3));
+	for (i = 0; i < SCROLL_Y_DIM; ++i) {
+		addr[i + p_off * SCROLL_SIZE] = buf[i];
+	}
+
+	return 0;
 }
 
 
