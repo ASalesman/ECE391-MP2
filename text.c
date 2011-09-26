@@ -575,7 +575,6 @@ void rasterize_text(unsigned char buffer[4][STATUS_SIZE], const char *text,
 {
 	int i = 0;
 	size_t left_padding = 0; /* number of addresses to offset */
-	if (centered) left_padding = 1;
 
 	/* calculate the left_padding required to center the text */
 	size_t text_len = strlen(text);
@@ -583,9 +582,11 @@ void rasterize_text(unsigned char buffer[4][STATUS_SIZE], const char *text,
 		text_len = STATUS_MSG_LEN;
 	}
 
-	if (left_padding) {
+	if (alignment == ALIGN_CENTER) {
     /* half the offset is the number of characters */
-		left_padding += (STATUS_MSG_LEN - text_len);
+		left_padding = (STATUS_MSG_LEN - text_len);
+	} else if (alignment == ALIGN_RIGHT) {
+		left_padding = (STATUS_MSG_LEN - text_len * 2);
 	}
 
   /* clear the buffers */

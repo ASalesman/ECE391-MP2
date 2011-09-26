@@ -48,6 +48,9 @@
 #define SCROLL_X_WIDTH  (IMAGE_X_DIM / 4)          /* addresses (bytes)     */
 #define NUM_STATUS_ROWS 18
 #define STATUS_SIZE (SCROLL_X_WIDTH * NUM_STATUS_ROWS)
+#define ALIGN_LEFT 0
+#define ALIGN_CENTER 1
+#define ALIGN_RIGHT 2
 
 /* Standard VGA text font. */
 extern unsigned char font_data[256][16];
