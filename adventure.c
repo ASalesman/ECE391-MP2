@@ -201,7 +201,7 @@ cancel_status_thread (void* ignore)
 static game_condition_t
 game_loop ()
 {
-	static const char *typing = 0;
+	static size_t typing_offset = 0;
     /* 
      * Variables used to carry information between event loop ticks; see
      * initialization below for explanations of purpose.
@@ -254,10 +254,8 @@ game_loop ()
 	    enter_room = 0;
 	}
 
-	if (!typing) {
-		typing = get_typed_command();
-	}
-	if (*typing != '\0') {
+	const char *typing = get_typed_command();
+	if (typing[typing_offset] != '\0' || (typing_offset && *typing == '\0')) {
 		pthread_mutex_lock(&msg_lock);
 		pthread_cond_signal(&msg_cv);
 		pthread_mutex_unlock(&msg_lock);
