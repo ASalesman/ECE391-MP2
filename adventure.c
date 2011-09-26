@@ -247,7 +247,7 @@ game_loop ()
 	    enter_room = 0;
 	}
 
-	print_status_text("", 0x00, 0xFF);
+	print_status_text("test", 0x00, 0xFF);
 
 	show_screen ();
 

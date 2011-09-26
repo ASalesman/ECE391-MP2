@@ -571,26 +571,45 @@ unsigned char font_data[256][16] = {
 void rasterize_text(char **buffer, const char *text, char fg_color, char bg_color)
 {
 	int i = 0;
-	int x;
-	int y;
-	int left_padding;
-	int right_padding;
+	int left_padding = 1; /* number of addresses to offset */
 
-	/* clear the buffers */
+	/* calculate the left_padding required to center the text */
+	text_len = strlen(text);
+	if (text_len > SCROLL_X_WIDTH / FONT_WIDTH - 1) {
+		text_len = SCROLL_X_WIDTH / FONT_WIDTH - 1;
+	}
+
+	left_padding += (text_len - (SCROLL_X_WIDTH / FONT_WIDTH - 1) / 2);
+
+  /* clear the buffers */
 	for (i = 0; i < 4; ++i) {
 		memset(buffer[i], bg_color, STATUS_SIZE);
 	}
 
-	/* calculate the left_padding required to center the text */
+	for (i = 0; i < text_len; ++i) {
+		rasterize_char(buffer, left_padding, text[i], fg_color, bg_color);
+	}
 }
 
 /*
  * Rasterize c into memory located in the four buffers pointed to by buffer.
  */
-void rasterize_char(char **buffer, char c, char fg_color, char bg_color)
+void rasterize_char(char **buffer, size_t offset, char c, char fg_color, char bg_color)
 {
-	int p = 0;
-	int y = 1;
-	int x = 0;
-	
+	int p = 3;
+	int y;
+	int x;
+
+	for (y = 0; y < FONT_HEIGHT; ++y) {
+		for (x = 0; x < FONT_WIDTH; ++x) {
+			if (font_data[c + y] & 0x1 << x) {
+				buffer[p][offset + x + y * SCROLL_X_WIDTH] = fg_color;
+			} else {
+				buffer[p][offset + x + y * SCROLL_X_WIDTH] = bg_color;
+			}
+			if (--p < 0) {
+				p = 3;
+			}
+		}
+	}
 }
