@@ -37,7 +37,8 @@
 
 #include "text.h"
 
-void rasterize_char(unsigned char **buffer, size_t offset, char c, char fg_color, char bg_color);
+void rasterize_char(unsigned char buffer[4][STATUS_SIZE], size_t offset,
+                    char c, char fg_color, char bg_color);
 
 /*
  * These font data were read out of video memory during text mode and
