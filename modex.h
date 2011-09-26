@@ -60,6 +60,7 @@
 #define SCROLL_Y_DIM    IMAGE_Y_DIM                /* full image width      */
 #define SCROLL_X_WIDTH  (IMAGE_X_DIM / 4)          /* addresses (bytes)     */
 #define NUM_STATUS_ROWS 18
+#define STATUS_SIZE (SCROLL_X_WIDTH * NUM_STATUS_ROWS)
 
 
 /*
