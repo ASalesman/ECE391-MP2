@@ -1038,9 +1038,9 @@ static void
 copy_status(unsigned char *img, unsigned short scr_addr)
 {
 	asm volatile (
-		"cld"
-		"movl $1440, %%ecx"
-		"rep movsb"
+		"cld                                                     ;"
+		"movl $1440, %%ecx                                       ;"
+		"rep movsb                                                "
 		: /* no outputs */
 		: "S" (img), "D" (mem_image + scr_addr)
 		: "eax", "ecx", "memory"
