@@ -645,8 +645,10 @@ status_thread (void* ignore)
 		 */
 		(void)pthread_mutex_lock (&msg_lock);
 		while ('\0' == status_msg[0]) {
-			print_status_text(room_name(game_info.where), STATUS_ROOM_COLOR, STATUS_BG_COLOR, ALIGN_LEFT, 1);
-			print_status_text(get_typed_command(), STATUS_COMMAND_COLOR, STATUS_BG_COLOR, ALIGN_RIGHT, 0);
+			print_status_text(room_name(game_info.where), STATUS_ROOM_COLOR,
+			                  STATUS_BG_COLOR, ALIGN_LEFT, 1);
+			print_status_text(get_typed_command(), STATUS_COMMAND_COLOR,
+			                  STATUS_BG_COLOR, ALIGN_RIGHT, 0);
 			pthread_cond_wait (&msg_cv, &msg_lock);
 		}
 
@@ -663,8 +665,10 @@ status_thread (void* ignore)
 			if (command[0] != '\0') {
 				alignment = ALIGN_LEFT;
 			}
-			print_status_text(status_msg, STATUS_FG_COLOR, STATUS_BG_COLOR, alignment, 1);
-			print_status_text(status_msg, STATUS_COMMAND_COLOR, STATUS_BG_COLOR, ALIGN_RIGHT, 0);
+			print_status_text(status_msg, STATUS_FG_COLOR, STATUS_BG_COLOR,
+			                  alignment, 1);
+			print_status_text(command, STATUS_COMMAND_COLOR, STATUS_BG_COLOR,
+			                  ALIGN_RIGHT, 0);
 
 			/* Add 1.5 seconds to it. */
 			if (500000000 <= ts.tv_nsec) {
