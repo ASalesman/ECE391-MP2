@@ -65,6 +65,8 @@ static int sanity_check (void);
 /* a few constants */
 #define TICK_USEC      50000 /* tick length in microseconds          */
 #define MOTION_SPEED   2     /* pixels moved per command             */
+#define STATUS_FG_COLOR 0xF0
+#define STATUS_BG_COLOR 0x0F
 
 /* outcome of the game */
 typedef enum {GAME_WON, GAME_QUIT} game_condition_t;
@@ -245,8 +247,6 @@ game_loop ()
 	    /* Only draw once on entry. */
 	    enter_room = 0;
 	}
-
-	print_status_text("test", 0x30, 0x01);
 
 	show_screen ();
 
@@ -614,7 +614,7 @@ redraw_room ()
 }
 
 
-/* 
+/*
  * status_thread
  *   DESCRIPTION: Function executed by status message helper thread.
  *                Waits for a message to be displayed, then shows the
@@ -629,56 +629,58 @@ redraw_room ()
 static void*
 status_thread (void* ignore)
 {
-    struct timespec ts; /* absolute wake-up time */
+	struct timespec ts; /* absolute wake-up time */
 
-    while (1) {
+	while (1) {
 
-	/* 
-	 * Wait for a message to appear.  Note that we must check the
-	 * condition after acquiring the lock, and that pthread_cond_wait
-	 * yields the lock, then reacquires the lock before returning.
-	 */
-	(void)pthread_mutex_lock (&msg_lock);
-	while ('\0' == status_msg[0]) {
-	    pthread_cond_wait (&msg_cv, &msg_lock);
+		/*
+		 * Wait for a message to appear.  Note that we must check the
+		 * condition after acquiring the lock, and that pthread_cond_wait
+		 * yields the lock, then reacquires the lock before returning.
+		 */
+		(void)pthread_mutex_lock (&msg_lock);
+		while ('\0' == status_msg[0]) {
+			pthread_cond_wait (&msg_cv, &msg_lock);
+		}
+
+		/*
+		 * A message is present: if we stop before the timeout
+		 * passes, assume that a new one has been posted; if the
+		 * timeout passes, clear the message and wait for a new one.
+		 */
+		do {
+			/* Get the current time. */
+			clock_gettime (CLOCK_REALTIME, &ts);
+			print_status_text(status_msg, STATUS_BG_COLOR, STATUS_FG_COLOR);
+
+			/* Add 1.5 seconds to it. */
+			if (500000000 <= ts.tv_nsec) {
+				ts.tv_sec += 2;
+				ts.tv_nsec -= 500000000;
+			} else {
+				ts.tv_sec += 1;
+				ts.tv_nsec += 500000000;
+			}
+
+			/*
+			 * And go to sleep.  If we wake up due to anything but a
+			 * timeout, we assume (possibly incorrectly) that a new
+			 * message has appeared and try to wait 1.5 seconds again.
+			 */
+		} while (ETIMEDOUT !=
+		         pthread_cond_timedwait (&msg_cv, &msg_lock, &ts));
+
+		/*
+		 * Clear the message, then release the lock (remember that
+		 * pthread_cond_timedwait reacquires the lock before returning).
+		 */
+		status_msg[0] = '\0';
+		print_status_text(room_name(game_info.where), STATUS_BG_COLOR, STATUS_FG_COLOR);
+		(void)pthread_mutex_unlock (&msg_lock);
 	}
 
-	/* 
-	 * A message is present: if we stop before the timeout
-	 * passes, assume that a new one has been posted; if the
-	 * timeout passes, clear the message and wait for a new one.
-	 */
-	do {
-	    /* Get the current time. */
-	    clock_gettime (CLOCK_REALTIME, &ts);
-	    
-	    /* Add 1.5 seconds to it. */
-	    if (500000000 <= ts.tv_nsec) {
-		ts.tv_sec += 2;
-		ts.tv_nsec -= 500000000;
-	    } else {
-		ts.tv_sec += 1;
-		ts.tv_nsec += 500000000;
-	    }
-
-	    /* 
-	     * And go to sleep.  If we wake up due to anything but a
-	     * timeout, we assume (possibly incorrectly) that a new
-	     * message has appeared and try to wait 1.5 seconds again.
-	     */
-	} while (ETIMEDOUT != 
-		 pthread_cond_timedwait (&msg_cv, &msg_lock, &ts));
-
-	/* 
-	 * Clear the message, then release the lock (remember that 
-	 * pthread_cond_timedwait reacquires the lock before returning).
-	 */
-	status_msg[0] = '\0';
-	(void)pthread_mutex_unlock (&msg_lock);
-    }
-
-    /* This code never executes--the thread should always be cancelled. */
-    return NULL;
+	/* This code never executes--the thread should always be cancelled. */
+	return NULL;
 }
 
 
