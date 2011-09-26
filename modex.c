@@ -178,6 +178,7 @@ static void copy_status (unsigned char* img, unsigned short scr_addr);
 #endif
 #define MEM_FENCE_MAGIC 0xF3
 static unsigned char build[BUILD_BUF_SIZE + 2 * MEM_FENCE_WIDTH];
+static unsigned char status[4][STATUS_SIZE];
 static int img3_off;		    /* offset of upper left pixel   */
 static unsigned char* img3;	    /* pointer to upper left pixel  */
 static int show_x, show_y;          /* logical view coordinates     */
@@ -520,7 +521,8 @@ show_screen ()
     for (i = 0; i < 4; i++) {
 	    SET_WRITE_MASK (1 << (i + 8));
 	    copy_image (addr + ((p_off - i + 4) & 3) * SCROLL_SIZE + (p_off < i),
-	                0);
+	                target_img);
+	    copy_status (status[i], 0);
     }
 
     /* 
@@ -651,12 +653,7 @@ draw_horiz_line (int y)
 void
 print_status_text(const char *text, char fg_color, char bg_color)
 {
-	char *buffer[4] = { build,
-	                    build + SCROLL_SIZE,
-	                    build + 2 * SCROLL_SIZE,
-	                    build + 3 * SCROLL_SIZE };
-
-	rasterize_text(buffer, text, fg_color, bg_color);
+	rasterize_text(status, text, fg_color, bg_color);
 }
 
 #endif /* !defined(TEXT_RESTORE_PROGRAM) */
@@ -1020,6 +1017,30 @@ copy_image (unsigned char* img, unsigned short scr_addr)
       : "eax", "ecx", "memory"
     );
 }
+
+
+/*
+ * DESCRIPTION: Copy one plane of the status bar from the status buffer to
+ *              the video memory.
+ * INPUTS: img -- a pointer to a single screen plane in the build buffer
+ *         scr_addr -- the destination offset in video memory
+ * OUTPUTS: none
+ * RETURN VALUE: none
+ * SIDE EFFECTS: copies a plane from the status buffer to video memory
+ */
+static void
+copy_status(unsigned char *img, unsigned short scr_addr)
+{
+	asm volatile (
+		"cld                                                     ;"
+		"movl $1440, %%ecx                                       ;"
+		"rep movsb                                                "
+		: /* no outputs */
+		: "S" (img), "D" (mem_image + scr_addr)
+		: "eax", "ecx", "memory"
+		);
+}
+
 
 
 #if defined(TEXT_RESTORE_PROGRAM)
