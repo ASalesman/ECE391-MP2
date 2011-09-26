@@ -523,7 +523,7 @@ show_screen ()
 	    SET_WRITE_MASK (1 << (i + 8));
 	    copy_image (addr + ((p_off - i + 4) & 3) * SCROLL_SIZE + (p_off < i),
 	                target_img);
-	    copy_status (status + i * STATUS_SIZE, mem_image);
+	    copy_status (status + i * STATUS_SIZE, 0);
     }
 
     /* 
