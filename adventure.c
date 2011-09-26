@@ -259,8 +259,7 @@ game_loop ()
 		pthread_mutex_lock(&msg_lock);
 		pthread_cond_signal(&msg_cv);
 		pthread_mutex_unlock(&msg_lock);
-		typing = get_typed_command();
-		typing += strlen(typing);
+		typing_offset = strlen(typing);
 	}
 
 	show_screen ();
