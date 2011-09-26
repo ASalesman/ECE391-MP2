@@ -237,7 +237,10 @@ game_loop ()
 
 	    /* Discard any partially-typed command. */
 	    reset_typed_command ();
-	    
+	    pthread_mutex_lock(&msg_lock);
+	    pthread_cond_signal(&msg_cv);
+	    pthread_mutex_unlock(&msg_lock);
+
 	    /* Adjust colors and photo drawing for the current room photo. */
 	    prep_room (game_info.where);
 
@@ -640,6 +643,7 @@ status_thread (void* ignore)
 		 */
 		(void)pthread_mutex_lock (&msg_lock);
 		while ('\0' == status_msg[0]) {
+			print_status_text(room_name(game_info.where), STATUS_BG_COLOR, STATUS_FG_COLOR);
 			pthread_cond_wait (&msg_cv, &msg_lock);
 		}
 
@@ -675,7 +679,6 @@ status_thread (void* ignore)
 		 * pthread_cond_timedwait reacquires the lock before returning).
 		 */
 		status_msg[0] = '\0';
-		print_status_text(room_name(game_info.where), STATUS_BG_COLOR, STATUS_FG_COLOR);
 		(void)pthread_mutex_unlock (&msg_lock);
 	}
 
