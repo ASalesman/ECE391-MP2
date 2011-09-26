@@ -201,6 +201,7 @@ cancel_status_thread (void* ignore)
 static game_condition_t
 game_loop ()
 {
+    static typing = get_typed_command();
     /* 
      * Variables used to carry information between event loop ticks; see
      * initialization below for explanations of purpose.
@@ -251,6 +252,14 @@ game_loop ()
 
 	    /* Only draw once on entry. */
 	    enter_room = 0;
+	}
+
+	if (*typing != '\0') {
+		pthread_mutex_lock(&msg_lock);
+		pthread_cond_signal(&msg_cv);
+		pthread_mutex_unlock(&msg_lock);
+		typing = get_typed_command();
+		typing += strlen(typing);
 	}
 
 	show_screen ();
