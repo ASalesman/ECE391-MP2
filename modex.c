@@ -651,9 +651,10 @@ draw_horiz_line (int y)
 }
 
 void
-print_status_text(const char *text, char fg_color, char bg_color, int centered)
+print_status_text(const char *text, char fg_color, char bg_color,
+                  int alignment, int clear)
 {
-	rasterize_text(status, text, fg_color, bg_color, centered);
+	rasterize_text(status, text, fg_color, bg_color, alignment, clear);
 }
 
 #endif /* !defined(TEXT_RESTORE_PROGRAM) */

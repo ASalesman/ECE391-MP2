@@ -139,6 +139,6 @@ extern int draw_horiz_line (int y);
 extern int draw_vert_line (int x);
 
 extern void print_status_text(const char *text, char fg_color, char bg_color,
-                              int centered);
+                              int alignment, int clear);
 
 #endif /* MODEX_H */

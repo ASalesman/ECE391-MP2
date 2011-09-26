@@ -65,10 +65,10 @@ static int sanity_check (void);
 /* a few constants */
 #define TICK_USEC      50000 /* tick length in microseconds          */
 #define MOTION_SPEED   2     /* pixels moved per command             */
-#define STATUS_FG_COLOR 0x20
-#define STATUS_ROOM_COLOR 0xF0
-#define STATUS_COMMAND_COLOR 0x40
-#define STATUS_BG_COLOR 0x0F
+#define STATUS_FG_COLOR 0x02
+#define STATUS_ROOM_COLOR 0x0F
+#define STATUS_COMMAND_COLOR 0x04
+#define STATUS_BG_COLOR 0xF0
 
 /* outcome of the game */
 typedef enum {GAME_WON, GAME_QUIT} game_condition_t;
@@ -645,8 +645,8 @@ status_thread (void* ignore)
 		 */
 		(void)pthread_mutex_lock (&msg_lock);
 		while ('\0' == status_msg[0]) {
-			print_status_text(room_name(game_info.where), STATUS_ROOM_COLOR, STATUS_BG_COLOR, ALIGN_LEFT);
-			print_status_text(get_typed_command(), STATUS_COMMAND_COLOR, STATUS_BG_COLOR, ALIGN_RIGHT);
+			print_status_text(room_name(game_info.where), STATUS_ROOM_COLOR, STATUS_BG_COLOR, ALIGN_LEFT, 1);
+			print_status_text(get_typed_command(), STATUS_COMMAND_COLOR, STATUS_BG_COLOR, ALIGN_RIGHT, 0);
 			pthread_cond_wait (&msg_cv, &msg_lock);
 		}
 
@@ -663,8 +663,8 @@ status_thread (void* ignore)
 			if (command[0] != '\0') {
 				alignment = ALIGN_LEFT;
 			}
-			print_status_text(status_msg, STATUS_FG_COLOR, STATUS_BG_COLOR, alignment);
-			print_status_text(status_msg, STATUS_COMMAND_COLOR, STATUS_BG_COLOR, ALIGN_RIGHT);
+			print_status_text(status_msg, STATUS_FG_COLOR, STATUS_BG_COLOR, alignment, 1);
+			print_status_text(status_msg, STATUS_COMMAND_COLOR, STATUS_BG_COLOR, ALIGN_RIGHT, 0);
 
 			/* Add 1.5 seconds to it. */
 			if (500000000 <= ts.tv_nsec) {
