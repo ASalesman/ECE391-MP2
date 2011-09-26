@@ -71,7 +71,9 @@
  */
 #define SCROLL_SIZE     (SCROLL_X_WIDTH * SCROLL_Y_DIM)
 #define SCREEN_SIZE	(SCROLL_SIZE * 4 + 1)
-#define BUILD_BUF_SIZE  (SCREEN_SIZE + 20000) 
+#define STATUS_SIZE (SCROLL_X_WIDTH * NUM_STATUS_ROWS)
+#define BUILD_BUF_SIZE  (SCREEN_SIZE + 20000)
+#define STATUS_BUF_SIZE (STATUS_SIZE * 4)
 #define BUILD_BASE_INIT ((BUILD_BUF_SIZE - SCREEN_SIZE) / 2)
 
 /* Mode X and general VGA parameters */
@@ -177,6 +179,7 @@ static void copy_image (unsigned char* img, unsigned short scr_addr);
 #endif
 #define MEM_FENCE_MAGIC 0xF3
 static unsigned char build[BUILD_BUF_SIZE + 2 * MEM_FENCE_WIDTH];
+static unsigned char status[STATUS_BUF_SIZE];
 static int img3_off;		    /* offset of upper left pixel   */
 static unsigned char* img3;	    /* pointer to upper left pixel  */
 static int show_x, show_y;          /* logical view coordinates     */
@@ -520,7 +523,7 @@ show_screen ()
 	    SET_WRITE_MASK (1 << (i + 8));
 	    copy_image (addr + ((p_off - i + 4) & 3) * SCROLL_SIZE + (p_off < i),
 	                target_img);
-	    copy_image (build, mem_image);
+	    copy_image (status + i * STATUS_SIZE, mem_image);
     }
 
     /* 
@@ -651,10 +654,10 @@ draw_horiz_line (int y)
 void
 print_status_text(const char *text, char fg_color, char bg_color)
 {
-	char *buffer[4] = { build,
-	                    build + SCROLL_SIZE,
-	                    build + 2 * SCROLL_SIZE,
-	                    build + 3 * SCROLL_SIZE };
+	char *buffer[4] = { status,
+	                    status + STATUS_SIZE,
+	                    status + 2 * STATUS_SIZE,
+	                    status + 3 * STATUS_SIZE };
 
 	rasterize_text(buffer, text, fg_color, bg_color);
 }
