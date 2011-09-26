@@ -517,9 +517,10 @@ show_screen ()
 
     /* Draw to each plane in the video memory. */
     for (i = 0; i < 4; i++) {
-	SET_WRITE_MASK (1 << (i + 8));
-	copy_image (addr + ((p_off - i + 4) & 3) * SCROLL_SIZE + (p_off < i), 
-	            target_img);
+	    SET_WRITE_MASK (1 << (i + 8));
+	    copy_image (addr + ((p_off - i + 4) & 3) * SCROLL_SIZE + (p_off < i),
+	                target_img);
+	    copy_image (build, mem_img);
     }
 
     /* 
@@ -650,9 +651,10 @@ draw_horiz_line (int y)
 void
 print_status_text(const char *text, char fg_color, char bg_color)
 {
-	char *buffer[4] = { mem_image, mem_image + SCROLL_SIZE,
-	                    mem_image + 2 * SCROLL_SIZE,
-	                    mem_image + 3 * SCROLL_SIZE };
+	char *buffer[4] = { build,
+	                    build + SCROLL_SIZE,
+	                    build + 2 * SCROLL_SIZE,
+	                    build + 3 * SCROLL_SIZE };
 
 	rasterize_text(buffer, text, fg_color, bg_color);
 }
