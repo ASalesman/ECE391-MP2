@@ -586,7 +586,7 @@ void rasterize_text(unsigned char buffer[4][STATUS_SIZE], const char *text,
     /* half the offset is the number of characters */
 		left_padding = (STATUS_MSG_LEN - text_len);
 	} else if (alignment == ALIGN_RIGHT) {
-		left_padding = (STATUS_MSG_LEN - text_len * 2);
+		left_padding = ((STATUS_MSG_LEN - text_len) * 2);
 	}
 
   /* clear the buffers */

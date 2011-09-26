@@ -154,6 +154,10 @@ typed_a_char (char c)
 	typing[len] = c;
 	typing[len + 1] = '\0';
     }
+
+    pthread_mutex_lock(&msg_lock);
+    pthread_cond_signal(&msg_cv);
+    pthread_mutex_unlock(&msg_lock);
 }
 
 /* 
