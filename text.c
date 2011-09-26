@@ -571,10 +571,11 @@ unsigned char font_data[256][16] = {
  * characters will be truncated. This is to optimize for mode-x planes.
  */
 void rasterize_text(unsigned char buffer[4][STATUS_SIZE], const char *text,
-                    char fg_color, char bg_color)
+                    char fg_color, char bg_color, int centered)
 {
 	int i = 0;
-	size_t left_padding = 1; /* number of addresses to offset */
+	size_t left_padding = 0; /* number of addresses to offset */
+	if (centered) left_padding = 1;
 
 	/* calculate the left_padding required to center the text */
 	size_t text_len = strlen(text);
@@ -582,7 +583,10 @@ void rasterize_text(unsigned char buffer[4][STATUS_SIZE], const char *text,
 		text_len = STATUS_MSG_LEN;
 	}
 
-	left_padding += (STATUS_MSG_LEN - text_len); /* half the offset is the number of characters */
+	if (left_padding) {
+    /* half the offset is the number of characters */
+		left_padding += (STATUS_MSG_LEN - text_len);
+	}
 
   /* clear the buffers */
 	for (i = 0; i < 4; ++i) {
