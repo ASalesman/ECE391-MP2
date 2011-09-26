@@ -578,7 +578,7 @@ void rasterize_text(char **buffer, const char *text, char fg_color, char bg_colo
 
 	/* clear the buffers */
 	for (i = 0; i < 4; ++i) {
-		memset(buffer[i], bg_color, NUM_STATUS_ROWS * SCROLL_X_WIDTH);
+		memset(buffer[i], bg_color, STATUS_SIZE);
 	}
 
 	/* calculate the left_padding required to center the text */
