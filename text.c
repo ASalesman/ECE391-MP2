@@ -582,7 +582,7 @@ void rasterize_text(unsigned char buffer[4][STATUS_SIZE], const char *text,
 		text_len = STATUS_MSG_LEN;
 	}
 
-	left_padding += (STATUS_MSG_LEN - text_len) / 2;
+	left_padding += (STATUS_MSG_LEN - text_len); /* half the offset is the number of characters */
 
   /* clear the buffers */
 	for (i = 0; i < 4; ++i) {
@@ -606,7 +606,7 @@ void rasterize_char(unsigned char buffer[4][STATUS_SIZE], size_t offset,
 
 	for (y = 0; y < FONT_HEIGHT; ++y) {
 		for (x = 0; x < FONT_WIDTH; ++x) {
-			if (font_data[c][y] & (1 << x)) {
+			if (font_data[c][y] & (0xf0U >> x)) {
 				buffer[p][offset + x + y * SCROLL_X_WIDTH] = fg_color;
 			}
 			if (--p < 0) {
