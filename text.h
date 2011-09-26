@@ -46,6 +46,6 @@
 /* Standard VGA text font. */
 extern unsigned char font_data[256][16];
 
-extern void rasterize_text(char **buffer, const char *text, char fg_color, char bg_color);
+extern void rasterize_text(unsigned char **buffer, const char *text, char fg_color, char bg_color);
 
 #endif /* TEXT_H */

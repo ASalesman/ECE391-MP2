@@ -37,7 +37,7 @@
 
 #include "text.h"
 
-void rasterize_char(char **buffer, size_t offset, char c, char fg_color, char bg_color);
+void rasterize_char(unsigned char **buffer, size_t offset, char c, char fg_color, char bg_color);
 
 /*
  * These font data were read out of video memory during text mode and
@@ -569,7 +569,8 @@ unsigned char font_data[256][16] = {
  * Font size is 16 pixels tall. Strings longer than SCROLL_X_DIM / 8 - 1
  * characters will be truncated. This is to optimize for mode-x planes.
  */
-void rasterize_text(char **buffer, const char *text, char fg_color, char bg_color)
+void rasterize_text(unsigned char buffer[4][STATUS_SIZE], const char *text,
+                    char fg_color, char bg_color)
 {
 	int i = 0;
 	size_t left_padding = 1; /* number of addresses to offset */
@@ -595,7 +596,8 @@ void rasterize_text(char **buffer, const char *text, char fg_color, char bg_colo
 /*
  * Rasterize c into memory located in the four buffers pointed to by buffer.
  */
-void rasterize_char(char **buffer, size_t offset, char c, char fg_color, char bg_color)
+void rasterize_char(unsigned char buffer[4][STATUS_SIZE], size_t offset,
+                    char c, char fg_color, char bg_color)
 {
 	int p = 3;
 	int y;
