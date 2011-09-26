@@ -37,8 +37,9 @@
 
 #include "text.h"
 
+void rasterize_char(char **buffer, size_t offset, char c, char fg_color, char bg_color);
 
-/* 
+/*
  * These font data were read out of video memory during text mode and
  * saved here.  They could be read in the same manner at the start of a
  * game, but keeping a copy allows us to run the game to fix text mode
@@ -571,10 +572,10 @@ unsigned char font_data[256][16] = {
 void rasterize_text(char **buffer, const char *text, char fg_color, char bg_color)
 {
 	int i = 0;
-	int left_padding = 1; /* number of addresses to offset */
+	size_t left_padding = 1; /* number of addresses to offset */
 
 	/* calculate the left_padding required to center the text */
-	text_len = strlen(text);
+	size_t text_len = strlen(text);
 	if (text_len > SCROLL_X_WIDTH / FONT_WIDTH - 1) {
 		text_len = SCROLL_X_WIDTH / FONT_WIDTH - 1;
 	}
@@ -602,7 +603,7 @@ void rasterize_char(char **buffer, size_t offset, char c, char fg_color, char bg
 
 	for (y = 0; y < FONT_HEIGHT; ++y) {
 		for (x = 0; x < FONT_WIDTH; ++x) {
-			if (font_data[c + y] & 0x1 << x) {
+			if (font_data[c + y] & (1 << x)) {
 				buffer[p][offset + x + y * SCROLL_X_WIDTH] = fg_color;
 			} else {
 				buffer[p][offset + x + y * SCROLL_X_WIDTH] = bg_color;
