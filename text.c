@@ -603,7 +603,7 @@ void rasterize_char(char **buffer, size_t offset, char c, char fg_color, char bg
 
 	for (y = 0; y < FONT_HEIGHT; ++y) {
 		for (x = 0; x < FONT_WIDTH; ++x) {
-			if (font_data[c + y] & (1 << x)) {
+			if (font_data[c][y] & (1 << x)) {
 				buffer[p][offset + x + y * SCROLL_X_WIDTH] = fg_color;
 			} else {
 				buffer[p][offset + x + y * SCROLL_X_WIDTH] = bg_color;
