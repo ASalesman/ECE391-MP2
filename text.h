@@ -41,6 +41,7 @@
 /* The default VGA text mode font is 8x16 pixels. */
 #define FONT_WIDTH   8
 #define FONT_HEIGHT 16
+#define STATUS_MSG_LEN 40    /* maximum length of status message     */
 
 /* Standard VGA text font. */
 extern unsigned char font_data[256][16];

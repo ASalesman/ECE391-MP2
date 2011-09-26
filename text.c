@@ -576,11 +576,11 @@ void rasterize_text(char **buffer, const char *text, char fg_color, char bg_colo
 
 	/* calculate the left_padding required to center the text */
 	size_t text_len = strlen(text);
-	if (text_len > SCROLL_X_WIDTH / FONT_WIDTH - 1) {
-		text_len = SCROLL_X_WIDTH / FONT_WIDTH - 1;
+	if (text_len > STATUS_MSG_LEN) {
+		text_len = STATUS_MSG_LEN;
 	}
 
-	left_padding += (text_len - (SCROLL_X_WIDTH / FONT_WIDTH - 1) / 2);
+	left_padding += (STATUS_MSG_LEN - text_len) / 2;
 
   /* clear the buffers */
 	for (i = 0; i < 4; ++i) {

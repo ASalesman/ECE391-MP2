@@ -64,7 +64,6 @@ static int sanity_check (void);
 
 /* a few constants */
 #define TICK_USEC      50000 /* tick length in microseconds          */
-#define STATUS_MSG_LEN 40    /* maximum length of status message     */
 #define MOTION_SPEED   2     /* pixels moved per command             */
 
 /* outcome of the game */
@@ -247,7 +246,7 @@ game_loop ()
 	    enter_room = 0;
 	}
 
-	print_status_text("test", 0x00, 0xFF);
+	print_status_text("test", 0x00, 0xF0);
 
 	show_screen ();
 
