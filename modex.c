@@ -144,6 +144,7 @@ static void fill_palette_text ();
 static void write_font_data ();
 static void set_text_mode_3 (int clear_scr);
 static void copy_image (unsigned char* img, unsigned short scr_addr);
+static void copy_status (unsigned char* img, unsigned short scr_addr);
 
 
 /* 
