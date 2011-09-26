@@ -605,9 +605,13 @@ void rasterize_char(unsigned char buffer[4][STATUS_SIZE], size_t offset,
 	int x;
 
 	for (y = 0; y < FONT_HEIGHT; ++y) {
+		unsigned char row = font_data[c][y];
+		unsigned char temp = row << 4;
+		row = row >> 4;
+		row |= temp;
 		for (x = 0; x < FONT_WIDTH; ++x) {
-			if (font_data[c][y] & (0x80U >> x)) {
-				buffer[p][offset + x + (y + 1) * SCROLL_X_WIDTH] = fg_color;
+			if (row & (0x80U >> x)) {
+				buffer[p][offset + (x >> 2) + (y + 1) * SCROLL_X_WIDTH] = fg_color;
 			}
 			if (--p < 0) {
 				p = 3;
