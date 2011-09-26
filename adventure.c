@@ -644,7 +644,7 @@ status_thread (void* ignore)
 		 */
 		(void)pthread_mutex_lock (&msg_lock);
 		while ('\0' == status_msg[0]) {
-			print_status_text(room_name(game_info.where), STATUS_BG_COLOR, STATUS_ROOM_COLOR, 0);
+			print_status_text(room_name(game_info.where), STATUS_ROOM_COLOR, STATUS_BG_COLOR, 0);
 			pthread_cond_wait (&msg_cv, &msg_lock);
 		}
 
@@ -656,7 +656,7 @@ status_thread (void* ignore)
 		do {
 			/* Get the current time. */
 			clock_gettime (CLOCK_REALTIME, &ts);
-			print_status_text(status_msg, STATUS_BG_COLOR, STATUS_FG_COLOR, 1);
+			print_status_text(status_msg, STATUS_ROOM_COLOR, STATUS_BG_COLOR, 1);
 
 			/* Add 1.5 seconds to it. */
 			if (500000000 <= ts.tv_nsec) {
