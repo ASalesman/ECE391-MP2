@@ -201,7 +201,7 @@ cancel_status_thread (void* ignore)
 static game_condition_t
 game_loop ()
 {
-    static typing = get_typed_command();
+    static const char *typing = get_typed_command();
     /* 
      * Variables used to carry information between event loop ticks; see
      * initialization below for explanations of purpose.
