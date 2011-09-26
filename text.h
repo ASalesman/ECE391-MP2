@@ -36,12 +36,18 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-#include "modex.h"
-
 /* The default VGA text mode font is 8x16 pixels. */
 #define FONT_WIDTH   8
 #define FONT_HEIGHT 16
 #define STATUS_MSG_LEN 40    /* maximum length of status message     */
+#define IMAGE_X_DIM     320   /* pixels; must be divisible by 4             */
+#define IMAGE_Y_DIM     200   /* pixels                                     */
+#define IMAGE_X_WIDTH   (IMAGE_X_DIM / 4)          /* addresses (bytes)     */
+#define SCROLL_X_DIM	IMAGE_X_DIM                /* full image width      */
+#define SCROLL_Y_DIM    IMAGE_Y_DIM                /* full image width      */
+#define SCROLL_X_WIDTH  (IMAGE_X_DIM / 4)          /* addresses (bytes)     */
+#define NUM_STATUS_ROWS 18
+#define STATUS_SIZE (SCROLL_X_WIDTH * NUM_STATUS_ROWS)
 
 /* Standard VGA text font. */
 extern unsigned char font_data[256][16];
