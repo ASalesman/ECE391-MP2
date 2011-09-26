@@ -571,7 +571,7 @@ unsigned char font_data[256][16] = {
  * characters will be truncated. This is to optimize for mode-x planes.
  */
 void rasterize_text(unsigned char buffer[4][STATUS_SIZE], const char *text,
-                    char fg_color, char bg_color, int centered)
+                    char fg_color, char bg_color, int alignment)
 {
 	int i = 0;
 	size_t left_padding = 0; /* number of addresses to offset */
