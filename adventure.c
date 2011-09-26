@@ -255,7 +255,7 @@ game_loop ()
 	}
 
 	const char *typing = get_typed_command();
-	if (typing[typing_offset] != '\0' || (typing_offset && *typing == '\0')) {
+	if (typing_offset != strlen(typing)) {
 		pthread_mutex_lock(&msg_lock);
 		pthread_cond_signal(&msg_cv);
 		pthread_mutex_unlock(&msg_lock);
