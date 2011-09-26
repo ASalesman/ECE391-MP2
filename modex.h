@@ -138,6 +138,7 @@ extern int draw_horiz_line (int y);
 /* draw a vertical line at horizontal pixel x within the logical view window */
 extern int draw_vert_line (int x);
 
-extern void print_status_text(const char *text, char fg_color, char bg_color);
+extern void print_status_text(const char *text, char fg_color, char bg_color,
+                              int centered);
 
 #endif /* MODEX_H */
