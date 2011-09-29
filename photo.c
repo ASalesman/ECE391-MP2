@@ -43,7 +43,7 @@
 #include "photo.h"
 #include "photo_headers.h"
 #include "world.h"
-
+#include "octree.h"
 
 /* types local to this file (declared in types.h) */
 
@@ -59,6 +59,8 @@ struct photo_t {
 	photo_header_t hdr;                 /* defines height and width */
 	uint8_t		   palette[192][3];     /* optimized palette colors */
 	uint8_t*	   img;                 /* pixel data               */
+	octree_node_t *octree;              /* octree structure for
+	                                       mapping colors to palette */
 };
 
 /*
@@ -431,11 +433,15 @@ read_photo (const char* fname)
 	    MAX_PHOTO_WIDTH < p->hdr.width ||
 	    MAX_PHOTO_HEIGHT < p->hdr.height ||
 	    NULL == (p->img = malloc
-	             (p->hdr.width * p->hdr.height * sizeof (p->img[0]))))
+	             (p->hdr.width * p->hdr.height * sizeof (p->img[0]))) ||
+	    NULL == (p->octree = malloc(kOctreeSize * sizeof(octree_node_t))))
 	{
 		if (NULL != p) {
 			if (NULL != p->img) {
 				free (p->img);
+			}
+			if (NULL != p->octree) {
+				free (p->octree);
 			}
 			free (p);
 		}
@@ -466,20 +472,43 @@ read_photo (const char* fname)
 				return NULL;
 
 			}
+
+			/*
+			 * Add the pixel data to the octree
+			 */
+			octree_insert(p->octree, pixel);
+		}
+	}
+
+	/*
+	 * Calculate the color palette based on the pixels
+	 */
+	octree_calculate_palette(p->palette, p->octree);
+
+	/*
+	 * Re-read the file to apply the octree color palette reduction
+	 */
+	for (y = p->hdr.height; y-- > 0; ) {
+		for (x = 0; p->hdr.width > x; x++) {
+			/*
+			 * Try to read one 16-bit pixel.  On failure, clean up and
+			 * return NULL.
+			 */
+			if (1 != fread (&pixel, sizeof (pixel), 1, in)) {
+				free (p->img);
+				free (p);
+				(void)fclose (in);
+				return NULL;
+
+			}
+
 			/*
 			 * 16-bit pixel is coded as 5:6:5 RGB (5 bits red, 6 bits green,
-			 * and 6 bits blue).  We change to 2:2:2, which we've set for the
-			 * game objects.  You need to use the other 192 palette colors
-			 * to specialize the appearance of each photo.
-			 *
-			 * In this code, you need to calculate the p->palette values,
-			 * which encode 6-bit RGB as arrays of three uint8_t's.  When
-			 * the game puts up a photo, you should then change the palette
-			 * to match the colors needed for that photo.
+			 * and 5 bits blue).  Use the octree to find the index in the
+			 * palette.
 			 */
-			p->img[p->hdr.width * y + x] = (((pixel >> 14) << 4) |
-			                                (((pixel >> 9) & 0x3) << 2) |
-			                                ((pixel >> 3) & 0x3));
+			p->img[p->hdr.width * y + x] = octree_find_palette_index(p->octree,
+			                                                         pixel);
 		}
 	}
 
