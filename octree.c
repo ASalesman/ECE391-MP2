@@ -38,8 +38,8 @@ uint8_t octree_find_child_number(uint16_t pixel, uint8_t level)
 	assert(level < sizeof(uint8_t) * CHAR_BIT);
 
 	uint8_t red   = 0xff & pixel;
-	uint8_t green = 0xff & (pixel >> 8);
-	uint8_t blue  = 0xff & (pixel >> 16);
+	uint8_t green = 0xff & (pixel >> 5);
+	uint8_t blue  = 0xff & (pixel >> 11);
 	uint8_t child = 0;
 
 	child |= ((red >> (sizeof(red)   * CHAR_BIT - level)) & 1) << 2;
