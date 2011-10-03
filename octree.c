@@ -107,9 +107,9 @@ void octree_calculate_palette(uint8_t palette[192][3], octree_node_t *octree)
 
 		/* check for divide by zero */
 		if (node->child_count) {
-			palette[i + 128][0] = node->red_total   / node->child_count;
-			palette[i + 128][1] = node->blue_total  / node->child_count;
-			palette[i + 128][2] = node->green_total / node->child_count;
+			palette[i + 128][0] = (node->red_total   / node->child_count) >> 2;
+			palette[i + 128][1] = (node->blue_total  / node->child_count) >> 2;
+			palette[i + 128][2] = (node->green_total / node->child_count) >> 2;
 		}
 	}
 }
