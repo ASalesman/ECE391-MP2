@@ -42,9 +42,9 @@ uint8_t octree_find_child_number(uint16_t pixel, uint8_t level)
 	uint8_t blue  = 0xff & (pixel >> 16);
 	uint8_t child = 0;
 
-	child |= ((red >> (sizeof(red)   - level)) & 1) << 2;
-	child |= ((red >> (sizeof(green) - level)) & 1) << 1;
-	child |= ((red >> (sizeof(blue)  - level)) & 1);
+	child |= ((red >> (sizeof(red)   * CHAR_BIT - level)) & 1) << 2;
+	child |= ((red >> (sizeof(green) * CHAR_BIT - level)) & 1) << 1;
+	child |= ((red >> (sizeof(blue)  * CHAR_BIT - level)) & 1);
 
 	return child;
 }
@@ -141,6 +141,9 @@ uint8_t octree_find_palette_index(octree_node_t *octree, uint16_t pixel)
 
 	for (level = 0; level < 4; ++level) {
 		index = octree_child_index(index, octree_find_child_number(pixel, level));
+
+		assert(index < kOctreeSize);
+
 		if (octree[index].palette_index) {
 			palette_index = octree[index].palette_index;
 		}
