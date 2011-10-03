@@ -488,6 +488,7 @@ read_photo (const char* fname)
 	/*
 	 * Re-read the file to apply the octree color palette reduction
 	 */
+	rewind(in);
 	for (y = p->hdr.height; y-- > 0; ) {
 		for (x = 0; p->hdr.width > x; x++) {
 			/*
