@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <assert.h>
+#include <limits.h>
+
 #include "octree.h"
 
 struct octree_pair
@@ -30,7 +32,7 @@ size_t octree_parent_index(size_t current_index)
 
 uint8_t octree_find_child_number(uint16_t pixel, uint8_t level)
 {
-	assert(level <= sizeof(uint8_t));
+	assert(level <= sizeof(uint8_t) * CHAR_BIT);
 
 	uint8_t red   = 0xff & pixel;
 	uint8_t green = 0xff & (pixel >> 8);
