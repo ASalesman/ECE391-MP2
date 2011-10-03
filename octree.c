@@ -49,11 +49,12 @@ uint8_t octree_find_child_number(uint16_t pixel, uint8_t level)
 	return child;
 }
 
+/* pixels are encoded as rgb [5:6:5] */
 void octree_insert(octree_node_t *octree, uint16_t pixel)
 {
 	uint8_t red = 0xff & pixel;
-	uint8_t green = 0xff & (pixel >> 8);
-	uint8_t blue = 0xff & (pixel >> 16);
+	uint8_t green = 0xff & (pixel >> 5);
+	uint8_t blue = 0xff & (pixel >> 11);
 	uint8_t level = 0;
 	size_t i = 0;
 
