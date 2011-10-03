@@ -20,6 +20,9 @@ static int octree_pair_compare(void const *a, void const *b)
 
 size_t octree_child_index(size_t current_index, uint8_t child_number)
 {
+	assert(child_number < 8);
+	assert(current_index < kOctreeSize);
+
 	return 8 * (current_index + 1) + child_number;
 }
 
@@ -32,7 +35,7 @@ size_t octree_parent_index(size_t current_index)
 
 uint8_t octree_find_child_number(uint16_t pixel, uint8_t level)
 {
-	assert(level <= sizeof(uint8_t) * CHAR_BIT);
+	assert(level < sizeof(uint8_t) * CHAR_BIT);
 
 	uint8_t red   = 0xff & pixel;
 	uint8_t green = 0xff & (pixel >> 8);
