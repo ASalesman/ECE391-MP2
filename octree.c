@@ -64,6 +64,7 @@ void octree_insert(octree_node_t *octree, uint16_t pixel)
 		octree[i].green_total += green;
 		octree[i].blue_total  += blue;
 		++octree[i].child_count;
+		octree[i].palette_index = 0; /* zero the palette index */
 		i = octree_child_index(i, child);
 	}
 }
