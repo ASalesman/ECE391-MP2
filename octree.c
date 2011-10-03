@@ -135,11 +135,11 @@ void octree_prune_children(octree_node_t *octree, size_t index)
 
 uint8_t octree_find_palette_index(octree_node_t *octree, uint16_t pixel)
 {
-	size_t index = 0;
+	size_t index = octree_find_child_number(pixel, 0); /* skip to level 1 */
 	uint8_t palette_index = 0;
 	uint8_t level;
 
-	for (level = 0; level < 4; ++level) {
+	for (level = 1; level < 4; ++level) {
 		index = octree_child_index(index, octree_find_child_number(pixel, level));
 
 		assert(index < kOctreeSize);
