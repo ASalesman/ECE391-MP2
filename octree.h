@@ -19,6 +19,12 @@ typedef struct octree_node
 /* finds the index of the child of the current_index at child_number */
 size_t octree_child_index(size_t current_index, uint8_t child_number);
 
+/* finds the index of the parent of current_index */
+size_t octree_parent_index(size_t current_index);
+
+/* find the child number for level */
+uint8_t octree_find_child_number(uint16_t pixel, uint8_t level);
+
 /* insert pixel into the octree */
 void octree_insert(octree_node_t *octree, uint16_t pixel);
 
