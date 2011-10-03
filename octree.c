@@ -89,7 +89,6 @@ void octree_calculate_palette(uint8_t palette[192][3], octree_node_t *octree)
 		octree_node_t *node = &octree[pairs[i].index];
 
 		/* check for divide by zero */
-		palette[i] = 0;
 		if (node->child_count) {
 			/* truncate to six bits per color */
 			palette[i][0] = (node->red_total   / node->child_count) >> 2;
