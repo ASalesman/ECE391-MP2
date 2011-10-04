@@ -434,7 +434,8 @@ read_photo (const char* fname)
 	    MAX_PHOTO_HEIGHT < p->hdr.height ||
 	    NULL == (p->img = malloc
 	             (p->hdr.width * p->hdr.height * sizeof (p->img[0]))) ||
-	    NULL == (p->octree = malloc(kOctreeSize * sizeof(octree_node_t))))
+	    NULL == (p->octree = malloc(kOctreeSize * sizeof(octree_node_t))) ||
+	    memset(p->octree, 0, kOctreeSize * sizeof(octree_node_t))))
 	{
 		if (NULL != p) {
 			if (NULL != p->img) {

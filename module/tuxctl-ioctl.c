@@ -65,6 +65,8 @@ tuxctl_ioctl (struct tty_struct* tty, struct file* file,
 {
     switch (cmd) {
 	case TUX_BUTTONS:
+		if (arg == 0) return -EINVAL;
+		return read_button_state(tty, (uint32_t *)arg);
 	case TUX_SET_LED:
 	case TUX_READ_LED:
 	default:
@@ -72,3 +74,10 @@ tuxctl_ioctl (struct tty_struct* tty, struct file* file,
     }
 }
 
+int read_button_state(struct tty_struct *tty, uint32_t *arg)
+{
+	static const char cmd = MTCP_POLL;
+	((uint32_t *)arg) = 0xdeadbeef;
+	tuxctl_ldisc_put(tty, &cmd, 1);
+	return 0;
+}
